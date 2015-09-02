@@ -19,6 +19,7 @@
     geographyConfig: {
         dataUrl: null,
         hideAntarctica: true,
+        hideHawaiiAndAlaska : false,
         borderWidth: 1,
         borderColor: '#FDFDFD',
         popupTemplate: function(geography, data) {
@@ -169,6 +170,12 @@
     if ( geoConfig.hideAntarctica ) {
       geoData = geoData.filter(function(feature) {
         return feature.id !== "ATA";
+      });
+    }
+
+    if ( geoConfig.hideHawaiiAndAlaska ) {
+      geoData = geoData.filter(function(feature) {
+        return feature.id !== "HI" && feature.id !== 'AK';
       });
     }
 
@@ -459,7 +466,10 @@
           }
           if ( latLng ) return latLng[1];;
         })
-        .attr('r', 0) //for animation purposes
+        .attr('r', function(datum) {
+          // if animation enabled start with radius 0, otherwise use full size.
+          return options.animate ? 0 : val(datum.radius, options.radius, datum); 
+        })
         .attr('data-info', function(d) {
           return JSON.stringify(d);
         })
