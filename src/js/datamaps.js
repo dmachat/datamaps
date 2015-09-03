@@ -63,6 +63,8 @@
     Getter for value. If not declared on datumValue, look up the chain into optionsValue
   */
   function val( datumValue, optionsValue, context ) {
+    var optionsValues;
+
     if ( typeof context === 'undefined' ) {
       context = optionsValue;
       optionsValues = undefined;
@@ -209,6 +211,20 @@
       })
       .style('stroke-width', geoConfig.borderWidth)
       .style('stroke', geoConfig.borderColor);
+
+    if (geoConfig.mesh) {
+      var geoMesh = this.svg.append('g').attr('class', 'datamaps-mesh');
+      geoMesh.selectAll('path.state')
+        .data(topojson.feature(data, data.objects[ geoConfig.mesh ]).features)
+        .enter()
+        .append('path')
+        .attr('class', geoConfig.mesh)
+        .attr('d', this.path)
+        .style('fill', '#eee')
+        .style('opacity', 0)
+        .style('stroke-width', (geoConfig.borderWidth * 2 > 0.5 ? 0.5 : geoConfig.borderWidth * 2))
+        .style('stroke', geoConfig.borderColor);
+    }
   }
 
   function handleGeographyConfig () {
@@ -648,7 +664,7 @@
         handleGeographyConfig.call(self);
 
         if ( self.options.geographyConfig.popupOnHover || self.options.bubblesConfig.popupOnHover) {
-          hoverover = d3.select( self.options.element ).append('div')
+          var hoverover = d3.select( self.options.element ).append('div')
             .attr('class', 'datamaps-hoverover')
             .style('z-index', 10001)
             .style('position', 'absolute');
