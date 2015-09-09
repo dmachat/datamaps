@@ -215,13 +215,13 @@
     if (geoConfig.mesh) {
       var geoMesh = this.svg.append('g').attr('class', 'datamaps-mesh');
       geoMesh.selectAll('path.state')
-        .data(topojson.feature(data, data.objects[ geoConfig.mesh ]).features)
+        .data(topojson.feature(Datamap.prototype.usaTopo, Datamap.prototype.usaTopo.objects.usa).features)
         .enter()
         .append('path')
-        .attr('class', geoConfig.mesh)
+        .attr('class', function(d) {
+          return geoConfig.mesh + ' ' + d.id;
+        })
         .attr('d', this.path)
-        .style('fill', '#eee')
-        .style('opacity', 0)
         .style('stroke-width', (geoConfig.borderWidth * 2 > 0.5 ? 0.5 : geoConfig.borderWidth * 2))
         .style('stroke', geoConfig.borderColor);
     }
