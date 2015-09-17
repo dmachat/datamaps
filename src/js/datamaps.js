@@ -187,7 +187,7 @@
       .append('path')
       .attr('d', this.path)
       .attr('class', function(d) {
-        return 'datamaps-subunit ' + d.id;
+        return 'datamaps-subunit datamaps-' + d.id;
       })
       .attr('data-info', function(d) {
         return JSON.stringify( colorCodeData[d.id]);
@@ -215,11 +215,11 @@
     if (geoConfig.mesh) {
       var geoMesh = this.svg.append('g').attr('class', 'datamaps-mesh');
       geoMesh.selectAll('path.state')
-        .data(topojson.feature(Datamap.prototype.usaTopo, Datamap.prototype.usaTopo.objects.usa).features)
+        .data(topojson.feature(data, data.objects.states).features)
         .enter()
         .append('path')
         .attr('class', function(d) {
-          return geoConfig.mesh + ' ' + d.id;
+          return geoConfig.mesh + ' datamaps-' + d.id;
         })
         .attr('d', this.path)
         .style('stroke-width', (geoConfig.borderWidth * 2 > 0.5 ? 0.5 : geoConfig.borderWidth * 2))
@@ -723,10 +723,10 @@
         //if it's an object, overriding the previous data
         if ( subunitData === Object(subunitData) ) {
           this.options.data[subunit] = defaults(subunitData, this.options.data[subunit] || {});
-          var geo = this.svg.select('.' + subunit).attr('data-info', JSON.stringify(this.options.data[subunit]));
+          var geo = this.svg.select('.datamaps-' + subunit).attr('data-info', JSON.stringify(this.options.data[subunit]));
         }
         svg
-          .selectAll('.' + subunit)
+          .selectAll('.datamaps-' + subunit)
           .transition()
             .style('fill', color);
       }
